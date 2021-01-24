@@ -12,7 +12,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
       </Head>
 
       <Component {...pageProps} />
-      <footer className="text-center text-xs py-4">© 2020 DQN</footer>
+      <footer className="text-center text-xs py-4">© 2021 DQN</footer>
 
       <style global jsx>{`
         html {
