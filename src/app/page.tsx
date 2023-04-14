@@ -1,5 +1,6 @@
-import * as React from "react";
-import { useCallback, useEffect, useState } from "react";
+"use client";
+
+import { ChangeEventHandler, useCallback, useEffect, useState } from "react";
 import { tenjify } from "../helpers/tenjify";
 
 const HomePage: React.FC = () => {
@@ -9,11 +10,11 @@ const HomePage: React.FC = () => {
   const [threshold, setThreshold] = useState(128);
   const [reverse, setReverse] = useState(false);
 
-  const handleChangeFile = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeFile = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    (event) => {
       const file = event.target.files?.item(0);
 
-      if (!file) {
+      if (file == null) {
         setImageSrc("");
         setText("");
 
@@ -23,7 +24,7 @@ const HomePage: React.FC = () => {
       const canvas = document.createElement("canvas");
       const ctx = canvas?.getContext("2d");
 
-      if (!ctx) {
+      if (ctx === null) {
         return;
       }
 
@@ -39,45 +40,42 @@ const HomePage: React.FC = () => {
 
       reader.readAsDataURL(file);
     },
-    [setText, setImageSrc],
+    [],
   );
 
-  const handleChangeThreshold = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setThreshold(Number(event.target.value));
-    },
-    [setThreshold],
-  );
+  const handleChangeThreshold = useCallback<
+    ChangeEventHandler<HTMLInputElement>
+  >((event) => {
+    setThreshold(Number(event.target.value));
+  }, []);
 
-  const handleChangeWidth = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeWidth = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    (event) => {
       setWidth(Number(event.target.value));
     },
-    [setWidth],
+    [],
   );
 
-  const handleChangeReverse = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeReverse = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    (event) => {
       setReverse(event.target.checked);
     },
-    [setReverse],
+    [],
   );
 
   const handleClickCopy = useCallback(() => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(text);
-    }
+    navigator.clipboard.writeText(text);
   }, [text]);
 
   useEffect(() => {
-    if (imageSrc) {
+    if (imageSrc !== "") {
       tenjify(imageSrc, { width, threshold, reverse }).then(setText);
     }
-  }, [imageSrc, width, threshold, reverse, setText]);
+  }, [imageSrc, width, threshold, reverse]);
 
   return (
-    <main className="max-w-2xl mx-auto px-2 py-5">
-      <h1 className="text-3xl font-bold">tenjify-web</h1>
+    <main className="mx-auto max-w-2xl px-2 py-5">
+      <h1 className="text-3xl font-bold">tenjify web</h1>
       <div className="py-3">
         <input
           type="file"
@@ -118,7 +116,7 @@ const HomePage: React.FC = () => {
         <div className="pt-4">
           <button
             onClick={handleClickCopy}
-            className="bg-gray-800 text-white rounded p-1 w-full disabled:opacity-50"
+            className="w-full rounded bg-gray-800 p-1 text-white disabled:opacity-50"
             disabled={!text}
           >
             Copy to clipboard
